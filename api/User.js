@@ -105,7 +105,7 @@ router.post("/signup", (req, res) => {
 });
 
 // Signin
-router.post("/signin", (req, res) => {
+router.post("/login", (req, res) => {
   let { phone, password } = req.body;
   phone = phone.trim();
   password = password.trim();
@@ -113,50 +113,49 @@ router.post("/signin", (req, res) => {
   if (phone == "" || password == "") {
     res.json({
       status: "FAILED",
-      message: "Empty credentials supplied",
+      message: "Аль нэг талбар хоосон байна!",
     });
   } else {
-    // Check if user exist
+    // Хэрэв хэрэглэгч байвал
     User.find({ phone })
       .then((data) => {
         if (data.length) {
-          // User exists
-
+          // Хэрэглэгч олдвол
           const hashedPassword = data[0].password;
           bcrypt
             .compare(password, hashedPassword)
             .then((result) => {
               if (result) {
-                // Password match
+                // Нууц үг таарч байвал
                 res.json({
                   status: "SUCCESS",
-                  message: "Signin successful",
+                  message: "Амжилттай нэвтэрлээ!",
                   data: data,
                 });
               } else {
                 res.json({
                   status: "FAILED",
-                  message: "Invalid password entered!",
+                  message: "Нууц үг эсвэл утасны дугаар буруу байна!",
                 });
               }
             })
             .catch((err) => {
               res.json({
                 status: "FAILED",
-                message: "An error occurred while comparing passwords",
+                message: "Нууц үг эсвэл утасны дугаар буруу байна!",
               });
             });
         } else {
           res.json({
             status: "FAILED",
-            message: "Invalid credentials entered!",
+            message: "Нууц үг эсвэл утасны дугаар буруу байна!",
           });
         }
       })
       .catch((err) => {
         res.json({
           status: "FAILED",
-          message: "An error occurred while checking for existing user",
+          message: "Нэвтрэх үед алдаа гарлаа!",
         });
       });
   }
