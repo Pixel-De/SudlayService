@@ -67,16 +67,16 @@ router.post("/signup", (req, res) => {
                 phone,
                 age,
                 registerNum,
+                points: 0,
                 password: hashedPassword,
               });
 
               newUser
                 .save()
                 .then((result) => {
-                  res.json({
+                  res.status(200).json({
                     status: "SUCCESS",
                     message: "Амжилттай бүртгэлээ!",
-                    data: result,
                   });
                 })
                 .catch((err) => {
@@ -105,6 +105,14 @@ router.post("/signup", (req, res) => {
 });
 
 // Signin
+const generateRandom = () => {
+  let tmp = "";
+  for (let i = 0; i < 1; i++) {
+    tmp += Date.now();
+  }
+  return tmp;
+};
+
 router.post("/login", (req, res) => {
   let { phone, password } = req.body;
   phone = phone.trim();
@@ -130,7 +138,16 @@ router.post("/login", (req, res) => {
                 res.json({
                   status: "SUCCESS",
                   message: "Амжилттай нэвтэрлээ!",
-                  data: data,
+                  token: data[0]._id + generateRandom(),
+                  data: {
+                    id: data[0]._id,
+                    firstname: data[0].firstname,
+                    lastname: data[0].lastname,
+                    registerNum: data[0].registerNum,
+                    age: data[0].age,
+                    phone: data[0].phone,
+                    point: data[0].points,
+                  },
                 });
               } else {
                 res.json({

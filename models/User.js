@@ -9,8 +9,15 @@ const UserSchema = new Schema({
   age: Number,
   phone: String,
   registerNum: String,
+  points: Number,
+  course: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "course",
+    },
+  ],
 });
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("user", UserSchema);
 
 module.exports = User;
